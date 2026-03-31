@@ -1,58 +1,103 @@
 import json
-from langchain.docstore.document import Document
-from langchain_community.embeddings import HuggingFaceEmbeddings
-from langchain_community.vectorstores import Qdrant
-from qdrant_client import QdrantClient
-from dotenv import load_dotenv
+import re
 import os
+import uuid
+from langchain_core.documents import Document
+from langchain_nomic import NomicEmbeddings
+from qdrant_client import QdrantClient
+from qdrant_client.models import Distance, VectorParams, PointStruct
+from dotenv import load_dotenv
+
 load_dotenv()
 
 
-with open("MedData.json","r",encoding="utf-8") as f:
-    data =json.load(f)
+def clean_html(text):
+    """Strip HTML tags from section content."""
+    return re.sub(r'<[^>]+>', '', text).strip()
 
 
+# ── Load JSON ──────────────────────────────────────────────────────────────────
+with open("MedData.json", "r", encoding="utf-8") as f:
+    data = json.load(f)
+
+
+# ── Build documents ────────────────────────────────────────────────────────────
 docs = []
 for item in data:
-    medname = item["medname"]
-    urls = item["urls"]
-    details = item["details"]
+    medname = item["medicine"]
+    sections = item.get("sections", {})
+    meta_url = item.get("meta", {}).get("url", "")
+    date_modified = item.get("meta", {}).get("dateModified", "")
 
-    
+    combined_content = f"Medicine: {medname}\n\n"
+    for section_title, section_content in sections.items():
+        cleaned = clean_html(section_content)
+        if cleaned:
+            combined_content += f"### {section_title}\n{cleaned}\n\n"
 
-    for section, content in details.items():
-
-        section_url = None
-        for url in urls:
-            if section in url:
-                section_url = url
-                break
-
-        docs.append(
-            Document(
-                page_content=content,
-                metadata={
-                    "medicine": medname,
-                    "section": section,
-                    "urls": section_url  
-                }
-            )
+    docs.append(
+        Document(
+            page_content=combined_content.strip(),
+            metadata={
+                "medicine": medname,
+                "url": meta_url,
+                "date_modified": date_modified,
+            }
         )
+    )
+
+print(f"Total documents (1 per medicine): {len(docs)}")
 
 
-embeddings=HuggingFaceEmbeddings(model_name="sentence-transformers/paraphrase-MiniLM-L3-v2")
-
-client=QdrantClient(
-    url=os.getenv("QDRANT_URL"),
-    api_key=os.getenv("QDRANT_API_KEY")
+# ── Embed ──────────────────────────────────────────────────────────────────────
+embeddings = NomicEmbeddings(
+    model="nomic-embed-text-v1.5",
+    nomic_api_key=os.getenv("NOMIC_API_KEY"),
 )
 
-vector_store =Qdrant.from_documents(
-    documents=docs,
-    embedding=embeddings,
+texts = [doc.page_content for doc in docs]
+vectors = embeddings.embed_documents(texts)
+print(f"Generated {len(vectors)} embeddings (dim={len(vectors[0])})")
+
+
+# ── Qdrant — create collection + upload ────────────────────────────────────────
+COLLECTION_NAME = "MedData"
+VECTOR_DIM = len(vectors[0])   # 768 for nomic-embed-text-v1.5
+
+client = QdrantClient(
     url=os.getenv("QDRANT_URL"),
     api_key=os.getenv("QDRANT_API_KEY"),
-    collection_name="MedData"
 )
 
-print(f"Uploaded {len(docs)} page-documents to Qdrant (no overlap)")
+# Recreate collection (drops existing one if present)
+if client.collection_exists(COLLECTION_NAME):
+    client.delete_collection(COLLECTION_NAME)
+    print(f"Deleted existing collection '{COLLECTION_NAME}'")
+
+client.create_collection(
+    collection_name=COLLECTION_NAME,
+    vectors_config=VectorParams(size=VECTOR_DIM, distance=Distance.COSINE),
+)
+print(f"Created collection '{COLLECTION_NAME}'")
+
+# Build points
+points = [
+    PointStruct(
+        id=str(uuid.uuid4()),
+        vector=vector,
+        payload={
+            "page_content": doc.page_content,
+            **doc.metadata,
+        }
+    )
+    for doc, vector in zip(docs, vectors)
+]
+
+# Upload in batches of 100
+BATCH_SIZE = 100
+for i in range(0, len(points), BATCH_SIZE):
+    batch = points[i: i + BATCH_SIZE]
+    client.upsert(collection_name=COLLECTION_NAME, points=batch)
+    print(f"Uploaded batch {i // BATCH_SIZE + 1} ({len(batch)} docs)")
+
+print(f"\nDone! Uploaded {len(docs)} documents to Qdrant collection '{COLLECTION_NAME}'")
