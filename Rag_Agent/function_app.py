@@ -119,17 +119,3 @@ def query_endpoint(req: func.HttpRequest) -> func.HttpResponse:
             status_code=500,
             mimetype="application/json"
         )
-```
-
----
-
-### `requirements.txt`
-```
-azure-functions
-langchain
-langchain-core
-langchain-openai
-langchain-nomic
-langchain-qdrant
-qdrant-client
-python-dotenv
