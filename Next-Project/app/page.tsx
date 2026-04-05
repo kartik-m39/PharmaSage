@@ -1,107 +1,88 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 
 export default function Home() {
   return (
-    <>
-      <div className="relative overflow-hidden">
-        {/* Animated Background Elements */}
-        <div className="absolute inset-0 bg-black">
-          {/* Subtle Grid */}
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-900">
-            <div 
-              className="absolute inset-0 opacity-5"
-              style={{
-                backgroundImage: `
-                  linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
-                  linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px)
-                `,
-                backgroundSize: '60px 60px'
-              }}
-            />
-          </div>
-          
-          {/* Subtle Orbs */}
-          <div className="absolute top-20 left-10 w-32 h-32 bg-gray-600/10 rounded-full blur-xl animate-pulse" />
-          <div className="absolute top-40 right-20 w-24 h-24 bg-gray-500/10 rounded-full blur-xl animate-pulse delay-1000" />
-          <div className="absolute bottom-40 left-1/4 w-20 h-20 bg-gray-400/10 rounded-full blur-xl animate-pulse delay-2000" />
-          <div className="absolute bottom-20 right-1/3 w-28 h-28 bg-gray-500/10 rounded-full blur-xl animate-pulse delay-500" />
-        </div>
+    <div className="w-full min-h-[calc(100vh-73px)] relative overflow-hidden flex flex-col">
+      {/* Grid Pattern Background - faint */}
+      <div 
+        className="absolute inset-0 pointer-events-none opacity-[0.03]"
+        style={{
+          backgroundImage: `
+            linear-gradient(#1A1A1A 1px, transparent 1px),
+            linear-gradient(90deg, #1A1A1A 1px, transparent 1px)
+          `,
+          backgroundSize: '40px 40px'
+        }}
+      />
+      
+      {/* Structural left line */}
+      <div className="absolute left-8 md:left-24 top-0 bottom-0 w-[1px] bg-[#1A1A1A] z-0 hidden md:block" />
 
-        {/* Main Hero Section */}
-        <div
-          className="relative z-10 min-h-screen w-full flex items-center flex-col justify-center font-[Poppins] px-4"
-          style={{ minHeight: "calc(100vh - 4rem)" }}
-        >
-
-
-          {/* Main Content */}
-          <div className="relative z-20 text-center max-w-6xl mx-auto">
-            <h1 className="scroll-m-20 mb-6 text-5xl md:text-7xl font-extrabold tracking-tight text-white leading-tight">
-              Unlocking the potential of
-              <span className="block text-gray-100">
-                technology
-              </span>
-            </h1>
-
-            <div className="relative mb-12">
-              <p className="text-gray-400 text-xl md:text-2xl max-w-4xl mx-auto leading-relaxed px-6 relative z-10">
-                AI-powered pharmaceutical solutions to streamline your workflow and
-                <span className="text-gray-200 font-medium"> enhance patient care</span>
-              </p>
-              
-              {/* Subtle glow effect behind text */}
-              <div className="absolute inset-0 bg-white/5 blur-xl rounded-full" />
-            </div>
-
-            <div className="relative group">
-              <Link href="/query">
-                <span className="relative inline-block bg-white hover:bg-gray-100 text-black font-bold py-4 px-10 rounded-xl shadow-2xl transform transition duration-300 hover:scale-105">
-                  <span className="text-lg font-extrabold tracking-wide">
-                    Get Started
-                  </span>
-                  
-                  {/* Arrow Icon */}
-                  <svg className="inline-block ml-2 w-5 h-5 text-black transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                  </svg>
-                </span>
-              </Link>
-            </div>
-
-            {/* Feature Pills */}
-            <div className="flex flex-wrap gap-4 justify-center mt-12 px-4">
-              {['AI-Powered', 'Real-time Analytics', 'Cloud-Based', 'Secure'].map((feature, index) => (
-                <div 
-                  key={feature}
-                  className="px-6 py-2 rounded-full border border-gray-700 bg-gray-800/50 backdrop-blur-sm text-gray-300 text-sm hover:border-gray-600 hover:text-white transition-all duration-300 cursor-default"
-                  style={{ animationDelay: `${index * 200}ms` }}
-                >
-                  {feature}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Scroll Indicator */}
-          
-        </div>
-
-        {/* Cards Section with Enhanced Background */}
+      {/* Main Content */}
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-8 md:px-24 pt-20 pb-24 md:pt-20 flex-1 flex flex-col justify-center">
         
+        {/* Top Info line */}
+        <div className="flex items-center gap-4 mb-8 font-mono text-xs uppercase tracking-[0.2em] text-[#1A1A1A] opacity-70">
+          {/* <span>Vol. 1</span> */}
+          <div className="w-12 h-[1px] bg-[#1A1A1A]"></div>
+          <span>Digital Solutions</span>
+        </div>
+
+        {/* 2. Hero: Massive serif headline */}
+        <h1 className="font-serif text-6xl md:text-[7rem] lg:text-[8.5rem] leading-[0.9] text-[#1A1A1A] tracking-tighter mb-12">
+          The Clinical <br />
+          <span className="italic">Curator.</span>
+        </h1>
+
+        {/* Thin horizontal rule with a circular node */}
+        <div className="w-full flex items-center mb-12">
+          <div className="w-2 h-2 rounded-full border border-[#1A1A1A] bg-[#1A1A1A]" />
+          <div className="flex-1 h-[1px] bg-[#1A1A1A]" />
+          <div className="w-2 h-2 rounded-full border border-[#1A1A1A] bg-[#E6D5C3]" />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
+
+          <div className="md:col-span-4 flex flex-col justify-start">
+            <div className="relative self-center md:self-start md:ml-4 lg:ml-8 mt-2 md:mt-0 w-32 h-32 sm:w-40 sm:h-40 md:w-44 md:h-44 lg:w-52 lg:h-52">
+              <Image
+                src="/molecule.svg"
+                alt="molecule"
+                fill
+                className="object-contain opacity-90"
+                priority
+              />
+            </div>
+          </div>
+          
+          {/* Right Column - Justified subtitle and CTA */}
+          <div className="md:col-span-8 flex flex-col items-start">
+            <p className="text-[#1A1A1A] text-lg md:text-xl font-sans leading-relaxed text-justify mb-12 max-w-2xl">
+              AI-powered pharmaceutical intelligence engineered to streamline complex clinical workflows, optimize data retrieval, and enhance evidence-based patient care standards across medical institutions.
+            </p>
+
+            <Link href="/query">
+              <span className="group inline-flex items-center gap-4 border border-[#1A1A1A] px-8 py-4 font-mono text-xs uppercase tracking-[0.15em] hover:bg-[#1A1A1A] hover:text-[#E6D5C3] transition-colors cursor-pointer">
+                <span>Initialize Query</span>
+                <span className="w-8 h-[1px] bg-[#1A1A1A] group-hover:bg-[#E6D5C3] transition-colors" />
+                <svg className="w-3 h-3 group-hover:translate-x-1 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </span>
+            </Link>
+          </div>
+        </div>
+
       </div>
 
-      <style jsx>{`        
-        .animate-float {
-          animation: float 6s ease-in-out infinite;
-        }
-        
-        @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-20px); }
-        }
-      `}</style>
-    </>
+      {/* Bottom meta bar */}
+      <div className="w-full border-t border-[#1A1A1A] px-8 md:px-30 py-4 font-mono text-[10px] uppercase tracking-widest flex justify-between">
+        <span>Pharmasage Systems</span>
+        <span>SYS. ON</span>
+      </div>
+    </div>
   );
 }
