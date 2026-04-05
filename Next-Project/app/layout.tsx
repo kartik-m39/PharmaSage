@@ -3,13 +3,12 @@ import {
   ClerkProvider,
   SignInButton,
   SignUpButton,
-  SignedIn,
-  SignedOut,
   UserButton,
 } from "@clerk/nextjs";
 import { Newsreader, IBM_Plex_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
+import { auth } from "@clerk/nextjs/server";
 
 const newsreader = Newsreader({
   subsets: ["latin"],
@@ -33,11 +32,12 @@ export const metadata: Metadata = {
   description: "AI-powered pharmaceutical solutions",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const { userId } = await auth();
   return (
     <ClerkProvider>
       <html lang="en" className={`${newsreader.variable} ${plexMono.variable} ${inter.variable}`}>
@@ -53,8 +53,8 @@ export default function RootLayout({
             </div>
 
 
-            <div className="flex justify-end font-mono text-[11px] uppercase tracking-widest">
-              <SignedOut>
+            {/* <div className="flex justify-end font-mono text-[11px] uppercase tracking-widest">
+              {/* <SignedOut>
                 <div className="flex gap-4">
                   <SignInButton />
                   <SignUpButton />
@@ -62,7 +62,19 @@ export default function RootLayout({
               </SignedOut>
               <SignedIn>
                 <UserButton />
-              </SignedIn>
+              </SignedIn> */}
+              {/* <Show when="signed-out"> <div className="flex gap-4"> <SignInButton /> <SignUpButton /> </div> </Show> <Show when="signed-in"> <UserButton /> </Show>
+            </div> */}
+
+            <div className="flex justify-end font-mono text-[11px] uppercase tracking-widest">
+              {!userId ? (
+                <div className="flex gap-4">
+                  <SignInButton />
+                  <SignUpButton />
+                </div>
+              ) : (
+                <UserButton />
+              )}
             </div>
           </header>
 
