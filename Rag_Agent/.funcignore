@@ -1,0 +1,51 @@
+# Python virtual environment
+env/
+venv/
+.venv/
+
+# Development and testing files
+query.py
+ingestion.py
+MedData.json
+
+# Environment files
+.env
+.env.*
+local.settings.json
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Documentation (optional - uncomment if you don't want to deploy docs)
+# *.md
+
+# Logs
+*.log
+
+# Alternative requirements files (we'll use requirements.txt only)
+requirements-flask.txt
+x_requirements.txt

@@ -1,0 +1,67 @@
+# Azure Functions
+local.settings.json
+.python_packages/
+__blobstorage__/
+__queuestorage__/
+__azurite_db*__.json
+.funcignore.bak
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Environment variables
+.env
+.env.*
+*.env
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+*.cover
+.hypothesis/
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# Logs
+*.log
+
+# Backups
+*.bak
+*.backup
+*-old.*
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Data files (large datasets)
+*.json.gz
+*.csv.gz
+
+# Optional: Uncomment to exclude large data file
+# MedData.json
+
+DEPLOYMENT_SUMMARY.md
+DEPLOYMENT.md

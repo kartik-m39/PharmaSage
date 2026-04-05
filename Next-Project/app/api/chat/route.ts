@@ -46,7 +46,7 @@ export async function POST(req: NextRequest){
         ],
         }, {
         headers: {
-            'Authorization': `Bearer ${groqApiKey}`,
+            'Authorization': `Bearer ${groqAwpiKey}`,
             'Content-Type': 'application/json'
         }
         });
